@@ -3,20 +3,24 @@ package main
 import (
     "fmt"
     "net/http"
+    "os"
 )
 
-// handler function for the root URL
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hello, World! Welcome to my simple Go web app.")
+    fmt.Fprintf(w, "Hello, World! Welcome to my Go web app.")
 }
 
 func main() {
-    // Register the handler function
     http.HandleFunc("/", homeHandler)
 
-    // Start the server on port 8080
-    fmt.Println("Starting server on :8080...")
-    if err := http.ListenAndServe(":8080", nil); err != nil {
+    // Get the port from environment variable or default to 8080
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080"
+    }
+
+    fmt.Printf("Starting server on :%s...\n", port)
+    if err := http.ListenAndServe(":"+port, nil); err != nil {
         fmt.Println("Failed to start server:", err)
     }
 }
